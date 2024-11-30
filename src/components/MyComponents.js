@@ -2,7 +2,7 @@
 // function components
 
 import React from "react";
-import UserInfo from "./UserInfo";
+import AddUserInfo from "./AddUserInfo";
 import DisplayInfo from "./DisplayInfo";
 
 class MyComponents extends React.Component {
@@ -21,7 +21,14 @@ class MyComponents extends React.Component {
             }
         ]
     }
-
+    handleAddNewUser = (userObj) => {
+        console.log(userObj)
+        
+        this.setState({
+            // listUsers: [userObj, ...this.state.listUsers]
+            listUsers: [ ...this.state.listUsers, userObj]
+        })
+    }
     // handleClick(event) {
     //     // console.log(event)
     //     console.log("ok")
@@ -43,7 +50,9 @@ class MyComponents extends React.Component {
     render() {
         return (
             <div>
-                <UserInfo />
+                <AddUserInfo 
+                handleAddNewUser={this.handleAddNewUser}
+                />
                 <br></br>
                 <DisplayInfo 
                 listUsers= {this.state.listUsers} 
