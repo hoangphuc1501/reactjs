@@ -24,7 +24,8 @@ class DisplayInfo extends React.Component {
                     </span>
                 </div>
                 {this.state.isShowListUser &&
-                    <div>
+                // fragments
+                    <>
                         {listUsers.map((user) => {
                             return (
                                 <div key={user.id} className={+user.age > 24 ? "green" : "red"} >
@@ -34,7 +35,7 @@ class DisplayInfo extends React.Component {
                                 </div>
                             )
                         })}
-                    </div>
+                    </>
                 }
             </div>
         )
