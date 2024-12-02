@@ -1,36 +1,39 @@
-import React from "react";
+
+import React, { useState } from "react";
 import './DisplayInfo.scss';
-import logo from './../logo.svg';
-class DisplayInfo extends React.Component {
-    state = {
-        isShowListUser: true
-    }
-    handleShowHide = () => {
-        this.setState({
-            isShowListUser: !this.state.isShowListUser
-        })
-    }
+// import logo from './../logo.svg';
 
-    render() {
+const DisplayInfo = (props) => {
         // props viết tắt properties
-        const { listUsers } = this.props
+        const { listUsers } = props
+        const [isShowListUser, setShowHideListUser] = useState(true);
+        
+        const handleShowHide = () => {
+            setShowHideListUser(!isShowListUser)
+        }
+        // template + logic js
         return (
-
             <div className="display-infor-container">
-                <img src={logo} alt="" />
+                {/* <img src={logo} alt="" /> */}
                 <div>
-                    <span onClick={() => { this.handleShowHide() }}>
-                        {this.state.isShowListUser === true ? "Ẩn" : "Hiện"}
-                    </span>
+                    <button onClick={() => { handleShowHide() }}>
+                        {isShowListUser === true ? "Ẩn" : "Hiện"}
+                        
+                    </button>
                 </div>
-                {this.state.isShowListUser &&
-                // fragments
+                {isShowListUser &&
+                    // fragments để thay thế thẻ div
                     <>
                         {listUsers.map((user) => {
                             return (
                                 <div key={user.id} className={+user.age > 24 ? "green" : "red"} >
-                                    <div style={{color: "blue", paddingTop: "5px"}}>tôi tên là {user.name}</div>
-                                    <div>Tuổi: {user.age}</div>
+                                    <div>
+                                        <div>tôi tên là {user.name}</div>
+                                        <div>Tuổi: {user.age}</div>
+                                    </div>
+                                    <div>
+                                        <button onClick={() => props.handleDeleteUser(user.id)}>delete</button>
+                                    </div>
                                     <hr />
                                 </div>
                             )
@@ -40,5 +43,4 @@ class DisplayInfo extends React.Component {
             </div>
         )
     }
-}
 export default DisplayInfo;
