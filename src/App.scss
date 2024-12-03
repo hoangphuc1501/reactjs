@@ -10,6 +10,7 @@ body {
 
 .app-container {
   .header-container {
+      z-index: 9999;
     .navbar-nav {
       .nav-link {
         &.active {
