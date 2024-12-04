@@ -11,7 +11,7 @@ body {
 .app-container {
   .header-container {
       z-index: 9999;
-    .navbar-nav {
+    .navbar{
       .nav-link {
         &.active {
           color: red;

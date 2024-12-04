@@ -17,11 +17,13 @@ function Header() {
                         <NavLink to="/admin" className='nav-link'>Quản trị</NavLink>
                     </Nav>
                     <Nav className="me-auto">
-                        <NavDropdown title="Cài đặt" id="collapsible-nav-dropdown">
+                        <button className='btn btn-primary me-2'>Đăng nhập</button>
+                        <button  className="btn btn-outline-primary">Đăng ký </button>
+                        {/* <NavDropdown title="Cài đặt" id="collapsible-nav-dropdown">
                             <NavDropdown.Item >Đăng nhập</NavDropdown.Item>
                             <NavDropdown.Item >Đăng xuất</NavDropdown.Item>
                             <NavDropdown.Item >Thông tin</NavDropdown.Item>
-                        </NavDropdown>
+                        </NavDropdown> */}
                     </Nav>
                 </Navbar.Collapse>
             </Container>
