@@ -2,33 +2,67 @@ import { useState } from 'react';
 import { FcPlus } from "react-icons/fc";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import axios from 'axios';
+// const FormData = require('form-data');
 
-const ModalCreateUser = () => {
-    const [show, setShow] = useState(false);
+const ModalCreateUser = (props) => {
+    const { show, setShow } = props
+    // const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    const handleShow = () => {
+        setShow(true);
+        setEmail("");
+        setPassword("");
+        setRole("USER");
+        setUserName("");
+        setImage("");
+        setPreviewImage("");
+    };
 
-    const [ email, setEmail ] = useState('');
-    const [ password, setPassword ] = useState('');
-    const [ userName, setUserName ] = useState('');
-    const [ role, setRole ] = useState('USER');
-    const [ image, setImage ] = useState('');
-    const [ previewImage, setPreviewImage ] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [userName, setUserName] = useState('');
+    const [role, setRole] = useState('USER');
+    const [image, setImage] = useState('');
+    const [previewImage, setPreviewImage] = useState('');
 
     const handleUploadImage = (event) => {
-        if(event.target && event.target.files && event.target.files[0]){
+        if (event.target && event.target.files && event.target.files[0]) {
             setPreviewImage(URL.createObjectURL(event.target.files[0]));
             setImage(event.target.files[0]);
-        }else{
+        } else {
             // setPreviewImage("");
         }
     }
+    const handleSubmitCreateUser = async () => {
+        // validate
+
+        // call api
+        // let data = {
+        //     email: email,
+        //     password: password,
+        //     username: userName,
+        //     role: role,
+        //     userImage: image
+        // }
+        // console.log(data)
+        const data = new FormData();
+        data.append('email', email);
+        data.append('password', password);
+        data.append('username', userName);
+        data.append('role', role);
+        data.append('userImage', image);
+
+        let  res = await axios.post('http://localhost:8081/api/v1/participant', data);
+
+        console.log(res)
+    }
     return (
         <>
-            <Button variant="primary" onClick={handleShow}>
+            {/* <Button variant="primary" onClick={handleShow}>
                 Thêm Người dùng
-            </Button>
+            </Button> */}
 
             <Modal show={show} onHide={handleClose} size="xl" backdrop="static" className='modal-add-user'>
                 <Modal.Header closeButton>
@@ -37,39 +71,39 @@ const ModalCreateUser = () => {
                 <Modal.Body>
                     <form className="row g-3">
                         <div className="col-md-6">
-                            <label  className="form-label">Email </label>
-                            <input type="email" className="form-control" 
-                            value={email}
-                            onChange={(event) => setEmail(event.target.value)}
+                            <label className="form-label">Email </label>
+                            <input type="email" className="form-control"
+                                value={email}
+                                onChange={(event) => setEmail(event.target.value)}
                             />
                         </div>
                         <div className="col-md-6">
-                            <label  className="form-label">Mật khẩu</label>
-                            <input type="password" className="form-control" value={password} 
-                            onChange={(event) => setPassword(event.target.value)}
+                            <label className="form-label">Mật khẩu</label>
+                            <input type="password" className="form-control" value={password}
+                                onChange={(event) => setPassword(event.target.value)}
                             />
                         </div>
                         <div className="col-md-6">
-                            <label  className="form-label">Tên người dùng</label>
+                            <label className="form-label">Tên người dùng</label>
                             <input type="text" className="form-control" value={userName}
-                            onChange={(event) => setUserName(event.target.value)}
+                                onChange={(event) => setUserName(event.target.value)}
                             />
                         </div>
                         <div className="col-md-6">
-                            <label  className="form-label">Phân quyền</label>
-                            <select  className="form-select" onChange={(event) => setRole(event.target.value)}>
+                            <label className="form-label">Phân quyền</label>
+                            <select className="form-select" onChange={(event) => setRole(event.target.value)}>
                                 <option>Người dùng</option>
                                 <option>quản trị</option>
                             </select>
                         </div>
                         <div className="col-12">
-                            <label  className="form-label"><FcPlus /> Hình ảnh</label>
+                            <label className="form-label"><FcPlus /> Hình ảnh</label>
                             <input type="file" className="form-control" onChange={(event) => handleUploadImage(event)} />
                         </div>
                         <div className="col-12 priview-image">
-                            { previewImage ?
-                            <img src={previewImage} alt='' />
-                            :  <span>hiển thị hình</span> 
+                            {previewImage ?
+                                <img src={previewImage} alt='' />
+                                : <span>hiển thị hình</span>
                             }
                             {/* <span>hiển thị hình</span> */}
                             {/* <img src='https://cdn.shopvnb.com/uploads/san_pham/vot-cau-long-vnb-v88-xanh-chinh-hang-1.webp' alt='' /> */}
@@ -81,7 +115,7 @@ const ModalCreateUser = () => {
                     <Button variant="secondary" onClick={handleClose}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={handleClose}>
+                    <Button variant="primary" onClick={() => handleSubmitCreateUser()}>
                         Lưu
                     </Button>
                 </Modal.Footer>
