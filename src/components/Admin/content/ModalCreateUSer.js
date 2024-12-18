@@ -3,15 +3,16 @@ import { FcPlus } from "react-icons/fc";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 // const FormData = require('form-data');
 
 const ModalCreateUser = (props) => {
     const { show, setShow } = props
     // const [show, setShow] = useState(false);
 
-    const handleClose = () => setShow(false);
-    const handleShow = () => {
-        setShow(true);
+    // const handleClose = () => setShow(false);
+    const handleClose = () => {
+        setShow(false);
         setEmail("");
         setPassword("");
         setRole("USER");
@@ -35,8 +36,24 @@ const ModalCreateUser = (props) => {
             // setPreviewImage("");
         }
     }
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
     const handleSubmitCreateUser = async () => {
         // validate
+        const isValidateEmail = validateEmail(email);
+        if (!isValidateEmail) {
+            toast.error("email không hợp lệ")
+            return;
+        }
+        if (!password) {
+            toast.error("Mật khẩu không hợp lệ")
+            return;
+        }
 
         // call api
         // let data = {
@@ -54,9 +71,16 @@ const ModalCreateUser = (props) => {
         data.append('role', role);
         data.append('userImage', image);
 
-        let  res = await axios.post('http://localhost:8081/api/v1/participant', data);
-
-        console.log(res)
+        let res = await axios.post('http://localhost:8081/api/v1/participant', data);
+        if(res.data && res.data.EC === 0){
+            toast.success("Tạo mới thành công!");
+            handleClose();
+        }
+        if(res.data && res.data.EC !== 0){
+            toast.error("Tạo mới không thành công!");
+            handleClose();
+        }
+        console.log(res.data)
     }
     return (
         <>
