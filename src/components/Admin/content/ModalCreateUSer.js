@@ -75,12 +75,12 @@ const ModalCreateUser = (props) => {
         if(res.data && res.data.EC === 0){
             toast.success("Tạo mới thành công!");
             handleClose();
+            await props.fetchListUser();
         }
         if(res.data && res.data.EC !== 0){
             toast.error("Tạo mới không thành công!");
             handleClose();
         }
-        console.log(res.data)
     }
     return (
         <>
