@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FcPlus } from "react-icons/fc";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import _ from 'lodash';
 // const FormData = require('form-data');
 
-const ModalCreateUser = (props) => {
-    const { show, setShow } = props
+const ModalUpdateUSer = (props) => {
+    const { show, setShow, dataUpdate } = props
     // const [show, setShow] = useState(false);
 
     // const handleClose = () => setShow(false);
@@ -27,6 +28,18 @@ const ModalCreateUser = (props) => {
     const [role, setRole] = useState('USER');
     const [image, setImage] = useState('');
     const [previewImage, setPreviewImage] = useState('');
+
+    useEffect(() => {
+        if (!_.isEmpty(dataUpdate)) {
+            setEmail(dataUpdate.email);
+            setRole(dataUpdate.role);
+            setUserName(dataUpdate.username);
+            setImage("");
+            if(dataUpdate.image){
+                setPreviewImage(`data:image/jpeg;base64,${dataUpdate.image}`);
+            }
+        }
+    }, [dataUpdate])
 
     const handleUploadImage = (event) => {
         if (event.target && event.target.files && event.target.files[0]) {
@@ -71,16 +84,17 @@ const ModalCreateUser = (props) => {
         data.append('userImage', image);
 
         let res = await axios.post('http://localhost:8081/api/v1/participant', data);
-        if(res.data && res.data.EC === 0){
+        if (res.data && res.data.EC === 0) {
             toast.success("Tạo mới thành công!");
             handleClose();
             await props.fetchListUser();
         }
-        if(res.data && res.data.EC !== 0){
+        if (res.data && res.data.EC !== 0) {
             toast.error("Tạo mới không thành công!");
             handleClose();
         }
     }
+    console.log(props.dataUpdate)
     return (
         <>
             {/* <Button variant="primary" onClick={handleShow}>
@@ -89,7 +103,7 @@ const ModalCreateUser = (props) => {
 
             <Modal show={show} onHide={handleClose} size="xl" backdrop="static" className='modal-add-user'>
                 <Modal.Header closeButton>
-                    <Modal.Title>Thêm Người dùng</Modal.Title>
+                    <Modal.Title>Cập nhật người dùng</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <form className="row g-3">
@@ -97,18 +111,22 @@ const ModalCreateUser = (props) => {
                             <label className="form-label">Email </label>
                             <input type="email" className="form-control"
                                 value={email}
+                                disabled={true}
                                 onChange={(event) => setEmail(event.target.value)}
                             />
                         </div>
                         <div className="col-md-6">
                             <label className="form-label">Mật khẩu</label>
-                            <input type="password" className="form-control" value={password}
+                            <input type="password" className="form-control"
+                                value={password}
+                                disabled={true}
                                 onChange={(event) => setPassword(event.target.value)}
                             />
                         </div>
                         <div className="col-md-6">
                             <label className="form-label">Tên người dùng</label>
-                            <input type="text" className="form-control" value={userName}
+                            <input type="text" className="form-control" 
+                                value={userName}
                                 onChange={(event) => setUserName(event.target.value)}
                             />
                         </div>
@@ -147,4 +165,4 @@ const ModalCreateUser = (props) => {
     );
 }
 
-export default ModalCreateUser;
+export default ModalUpdateUSer;
