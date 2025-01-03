@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { FcPlus } from "react-icons/fc";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import axios from 'axios';
+import { postCreateNewUser } from '../../../services/apiService';
 import { toast } from 'react-toastify';
 // const FormData = require('form-data');
 
@@ -55,28 +55,13 @@ const ModalCreateUser = (props) => {
             return;
         }
 
-        // call api
-        // let data = {
-        //     email: email,
-        //     password: password,
-        //     username: userName,
-        //     role: role,
-        //     userImage: image
-        // }
-        const data = new FormData();
-        data.append('email', email);
-        data.append('password', password);
-        data.append('username', userName);
-        data.append('role', role);
-        data.append('userImage', image);
-
-        let res = await axios.post('http://localhost:8081/api/v1/participant', data);
-        if(res.data && res.data.EC === 0){
+        let data = await postCreateNewUser(email,password,userName, role, image);
+        if(data && data.EC === 0){
             toast.success("Tạo mới thành công!");
             handleClose();
             await props.fetchListUser();
         }
-        if(res.data && res.data.EC !== 0){
+        if(data && data.EC !== 0){
             toast.error("Tạo mới không thành công!");
             handleClose();
         }

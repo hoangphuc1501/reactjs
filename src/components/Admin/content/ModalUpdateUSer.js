@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { FcPlus } from "react-icons/fc";
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import axios from 'axios';
+import { putUpdateUser } from '../../../services/apiService';
 import { toast } from 'react-toastify';
 import _ from 'lodash';
+// import {putUpdataUser} from '../../../services/apiService';
 // const FormData = require('form-data');
 
 const ModalUpdateUSer = (props) => {
@@ -20,6 +21,7 @@ const ModalUpdateUSer = (props) => {
         setUserName("");
         setImage("");
         setPreviewImage("");
+        props.resetUpdateUser("");
     };
 
     const [email, setEmail] = useState('');
@@ -35,7 +37,7 @@ const ModalUpdateUSer = (props) => {
             setRole(dataUpdate.role);
             setUserName(dataUpdate.username);
             setImage("");
-            if(dataUpdate.image){
+            if (dataUpdate.image) {
                 setPreviewImage(`data:image/jpeg;base64,${dataUpdate.image}`);
             }
         }
@@ -56,41 +58,22 @@ const ModalUpdateUSer = (props) => {
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             );
     };
-    const handleSubmitCreateUser = async () => {
+    const handleSubmitUpdateUser = async () => {
         // validate
         const isValidateEmail = validateEmail(email);
         if (!isValidateEmail) {
             toast.error("email không hợp lệ")
             return;
         }
-        if (!password) {
-            toast.error("Mật khẩu không hợp lệ")
-            return;
-        }
 
-        // call api
-        // let data = {
-        //     email: email,
-        //     password: password,
-        //     username: userName,
-        //     role: role,
-        //     userImage: image
-        // }
-        const data = new FormData();
-        data.append('email', email);
-        data.append('password', password);
-        data.append('username', userName);
-        data.append('role', role);
-        data.append('userImage', image);
-
-        let res = await axios.post('http://localhost:8081/api/v1/participant', data);
-        if (res.data && res.data.EC === 0) {
-            toast.success("Tạo mới thành công!");
+        let data = await putUpdateUser(dataUpdate.id ,userName, role, image);
+        if (data && data.EC === 0) {
+            toast.success("Câp nhật thành công!");
             handleClose();
             await props.fetchListUser();
         }
-        if (res.data && res.data.EC !== 0) {
-            toast.error("Tạo mới không thành công!");
+        if (data && data.EC !== 0) {
+            toast.error("Cập nhật không thành công!");
             handleClose();
         }
     }
@@ -125,7 +108,7 @@ const ModalUpdateUSer = (props) => {
                         </div>
                         <div className="col-md-6">
                             <label className="form-label">Tên người dùng</label>
-                            <input type="text" className="form-control" 
+                            <input type="text" className="form-control"
                                 value={userName}
                                 onChange={(event) => setUserName(event.target.value)}
                             />
@@ -156,7 +139,7 @@ const ModalUpdateUSer = (props) => {
                     <Button variant="secondary" onClick={handleClose}>
                         Hủy
                     </Button>
-                    <Button variant="primary" onClick={() => handleSubmitCreateUser()}>
+                    <Button variant="primary" onClick={() => handleSubmitUpdateUser()}>
                         Lưu
                     </Button>
                 </Modal.Footer>
