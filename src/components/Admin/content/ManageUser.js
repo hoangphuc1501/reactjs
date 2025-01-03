@@ -1,17 +1,21 @@
 
 import ModalCreateUser from "./ModalCreateUSer";
+import Swal from 'sweetalert2';
 import './manageUser.scss';
 import TableUser from "./TableUser";
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import ModalUpdateUSer from "./ModalUpdateUSer";
+import ModalDeleteUser from "./ModalDeleteUser";
 
 
 
 const ManageUser = (Props) => {
     const [showModalCreateUser, setShowModalCreateUser] = useState(false);
     const [showModalUpdateUser, setShowModalUpdateUser] = useState(false);
+    const [showModalDeleteUser, setShowModalDeleteUser] = useState(false);
     const [dataUpdate, setDataUpdate] = useState({});
+    const [dataDelete, setDataDelete] = useState({});
     const [listUser, setListUser] = useState([]);
 
     const getAllUser = () => {
@@ -30,6 +34,10 @@ const ManageUser = (Props) => {
         setShowModalUpdateUser(true)
         setDataUpdate(user)
     }
+    const handleClickBtnDelete = (user) => {
+        setShowModalDeleteUser(true)
+        setDataDelete(user)
+    }
     const resetUpdateUser = () => {
         setDataUpdate({})
     }
@@ -46,6 +54,7 @@ const ManageUser = (Props) => {
                     <TableUser 
                     listUser={listUser}
                     handleClickBtnUpdate = {handleClickBtnUpdate}
+                    handleClickBtnDelete={handleClickBtnDelete}
                     />
                 </div>
                 <ModalCreateUser 
@@ -59,6 +68,12 @@ const ManageUser = (Props) => {
                 dataUpdate={dataUpdate}
                 fetchListUser={fetchListUser}
                 resetUpdateUser={resetUpdateUser}
+                />
+                <ModalDeleteUser
+                show={showModalDeleteUser}
+                setShow={setShowModalDeleteUser}
+                dataDelete={dataDelete}
+                fetchListUser={fetchListUser}
                 />
             </div>
             
